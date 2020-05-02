@@ -18,7 +18,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *     collectionOperations={"get", "post"},
- *     itemOperations={"get", "put", "delete"},
+ *     itemOperations={
+ *         "get"={
+ *             "normalization_context"={"groups"={"pizza_listing:read", "pizza_listing:item:get"}}
+ *         },
+ *         "put",
+ *         "delete"
+ *     },
  *     normalizationContext={"groups"={"pizza_listing:read"}},
  *     denormalizationContext={"groups"={"pizza_listing:write"}},
  *     shortName="pizzas",
@@ -43,7 +49,7 @@ class PizzaListing
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"pizza_listing:read", "pizza_listing:write"})
+     * @Groups({"pizza_listing:read", "pizza_listing:write", "orders:item:get"})
      * @Assert\NotBlank()
      * @Assert\Length(
      *     min=3,
@@ -54,7 +60,7 @@ class PizzaListing
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"pizza_listing:read"})
+     * @Groups({"pizza_listing:read", "orders:item:get"})
      * @Assert\NotBlank()
      */
     private $description;
@@ -79,7 +85,7 @@ class PizzaListing
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Toppings")
-     * @Groups({"pizza_listing:read", "pizza_listing:write"})
+     * @Groups({"pizza_listing:read", "pizza_listing:write", "orders:item:get"})
      */
     private $toppings;
 
